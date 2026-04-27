@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: aws
+
+
+aws:
+  #AWS region
+  region: us-east-1
+
+
+logging:
+  level:
+    software:
+      amazon:
+        awssdk: DEBUG
