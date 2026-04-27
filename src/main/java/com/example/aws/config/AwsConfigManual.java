@@ -1,15 +1,16 @@
 package com.example.aws.config;
 
 import org.springframework.beans.factory.annotation.Value;
-  import org.springframework.context.annotation.Bean;
-  import org.springframework.context.annotation.Configuration;
-  import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
-  import software.amazon.awssdk.regions.Region;
-  import software.amazon.awssdk.services.s3.S3Client;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.ec2.Ec2Client;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
-  public class AwsConfig {
+  public class AwsConfigManual {
 
       @Value("${aws.region}")
       private String region;
@@ -37,4 +38,12 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
                   .credentialsProvider(DefaultCredentialsProvider.builder().build())
                   .build();
       }
+
+    @Bean
+    public Ec2Client ec2Client() {
+        return Ec2Client.builder()
+                .region(Region.of(region))
+                .credentialsProvider(DefaultCredentialsProvider.builder().build())
+                .build();
+    }
   }

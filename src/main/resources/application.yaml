@@ -1,7 +1,10 @@
 spring:
   application:
     name: aws
-
+  cloud:
+    aws:
+      region:
+        static: us-east-1
 
 aws:
   #AWS region
