@@ -1,5 +1,7 @@
 package com.example.aws.service;
 
+import software.amazon.awssdk.services.ec2.model.KeyFormat;
+
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +32,11 @@ public interface Ec2Service {
     String getInstanceStatus(String instanceId);
 
     // Create key pair
-    String createKeyPair(String keyName);
+    String createKeyPair(String keyName, KeyFormat keyFormat);
 
     // List all key pair
-    List<String> listKeyPairs();
+    Map<String, String> listKeyPairs();
+
+    // Delete key pair
+    void deleteKeyPair(String keyPairId);
 }
