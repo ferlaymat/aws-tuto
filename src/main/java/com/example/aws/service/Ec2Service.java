@@ -1,6 +1,8 @@
 package com.example.aws.service;
 
 import software.amazon.awssdk.services.ec2.model.KeyFormat;
+import software.amazon.awssdk.services.ec2.model.Protocol;
+import software.amazon.awssdk.services.ec2.model.SecurityGroupRule;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ public interface Ec2Service {
     List<Map<String, String>> listInstancesDetails();
 
     // Create an instance
-    String createInstance(String instanceName, String amiId, String instanceType, String keyName);
+    String createInstance(String instanceName, String amiId, String instanceType, String keyName, String securityGroupId, Boolean withNginxScript);
 
     // Start an instance
     void startInstance(String instanceId);
@@ -39,4 +41,16 @@ public interface Ec2Service {
 
     // Delete key pair
     void deleteKeyPair(String keyPairId);
+
+    String createSecurityGroup(String groupName, String description, String vpcId);
+
+    void deleteSecurityGroup(String groupId);
+
+    List<Map<String, String>> listSecurityGroups();
+
+    void authorizeIngress(String groupId, String cidrIp, int port, Protocol protocol);
+
+    List<String> findRuleId(String groupId, Boolean isEgress);
+
+    void revokeIngress(String groupId, String ruleId);
 }
