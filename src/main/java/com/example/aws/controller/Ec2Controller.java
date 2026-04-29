@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.services.ec2.model.KeyFormat;
 import software.amazon.awssdk.services.ec2.model.Protocol;
-import software.amazon.awssdk.services.ec2.model.SecurityGroupRule;
 
 import java.util.List;
 import java.util.Map;
@@ -84,32 +83,32 @@ public class Ec2Controller {
     }
 
     @PostMapping("/secgroup/{groupName}")
-    public String createSecurityGroup(@PathVariable String groupName, @RequestBody String description, @RequestParam(required = false) String vpcId){
-        return ec2Service.createSecurityGroup(groupName,description,vpcId);
+    public String createSecurityGroup(@PathVariable String groupName, @RequestBody String description, @RequestParam(required = false) String vpcId) {
+        return ec2Service.createSecurityGroup(groupName, description, vpcId);
     }
 
     @DeleteMapping("/secgroup/{groupId}")
-    void deleteSecurityGroup(@PathVariable String groupId){
+    void deleteSecurityGroup(@PathVariable String groupId) {
         ec2Service.deleteSecurityGroup(groupId);
     }
 
     @GetMapping("/secgroup")
-    public List<Map<String, String>> listSecurityGroups(){
+    public List<Map<String, String>> listSecurityGroups() {
         return ec2Service.listSecurityGroups();
     }
 
-    @PostMapping("/secgroup/{groupId}/ingress")
-    public void authorizeIngress(@PathVariable String groupId, @RequestParam(defaultValue = "0.0.0.0/0") String cidrIp, @RequestParam(defaultValue = "80") int port, @RequestParam(defaultValue = "TCP") Protocol protocol){
-        ec2Service.authorizeIngress(groupId,cidrIp,port,protocol);
+    @PutMapping("/secgroup/{groupId}/ingress")
+    public void authorizeIngress(@PathVariable String groupId, @RequestParam(defaultValue = "0.0.0.0/0") String cidrIp, @RequestParam(defaultValue = "80") int port, @RequestParam(defaultValue = "TCP") Protocol protocol) {
+        ec2Service.authorizeIngress(groupId, cidrIp, port, protocol);
     }
 
     @GetMapping("/secgroup/{groupId}")
-    public List<String> findRuleId(@PathVariable String groupId, @RequestParam(defaultValue = "false") Boolean isEgress){
+    public List<String> findRuleId(@PathVariable String groupId, @RequestParam(defaultValue = "false") Boolean isEgress) {
         return ec2Service.findRuleId(groupId, isEgress);
     }
 
-    @DeleteMapping("/secgroup/{groupId}/ingress/{ruleId}")
-    public void revokeIngress(@PathVariable String groupId, @PathVariable String ruleId){
+    @PutMapping("/secgroup/{groupId}/ingress/{ruleId}")
+    public void revokeIngress(@PathVariable String groupId, @PathVariable String ruleId) {
         ec2Service.revokeIngress(groupId, ruleId);
     }
 }

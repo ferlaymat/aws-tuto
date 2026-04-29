@@ -1,6 +1,6 @@
 package com.example.aws.controller;
 
-import com.example.aws.model.PagedResponse;
+import com.example.aws.dto.PagedResponse;
 import com.example.aws.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

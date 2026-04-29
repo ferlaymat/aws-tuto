@@ -70,6 +70,12 @@
             <artifactId>ec2</artifactId>
         </dependency>
 
+        <!-- IAM -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>iam</artifactId>
+        </dependency>
+
         <!-- Lambda -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -99,7 +105,13 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>netty-nio-client</artifactId>
         </dependency>
-
+        <!-- custom - needed for dynamodb auto generation table config -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
