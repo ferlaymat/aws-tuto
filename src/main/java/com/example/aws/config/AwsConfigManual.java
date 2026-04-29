@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.iam.IamClient;
+import software.amazon.awssdk.services.lambda.LambdaClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
@@ -55,4 +56,13 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
                 .credentialsProvider(DefaultCredentialsProvider.builder().build())
                 .build();
     }
-  }
+
+    @Bean
+    public LambdaClient lambdaClient() {
+        return LambdaClient.builder()
+                .region(Region.of(region))
+                .credentialsProvider(DefaultCredentialsProvider.builder().build())
+                .build();
+    }
+
+}
