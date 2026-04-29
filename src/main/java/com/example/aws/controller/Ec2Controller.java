@@ -98,7 +98,7 @@ public class Ec2Controller {
         return ec2Service.listSecurityGroups();
     }
 
-    @PostMapping("/secgroup/{groupId}/ingress")
+    @PutMapping("/secgroup/{groupId}/ingress")
     public void authorizeIngress(@PathVariable String groupId, @RequestParam(defaultValue = "0.0.0.0/0") String cidrIp, @RequestParam(defaultValue = "80") int port, @RequestParam(defaultValue = "TCP") Protocol protocol){
         ec2Service.authorizeIngress(groupId,cidrIp,port,protocol);
     }
@@ -108,7 +108,7 @@ public class Ec2Controller {
         return ec2Service.findRuleId(groupId, isEgress);
     }
 
-    @DeleteMapping("/secgroup/{groupId}/ingress/{ruleId}")
+    @PutMapping("/secgroup/{groupId}/ingress/{ruleId}")
     public void revokeIngress(@PathVariable String groupId, @PathVariable String ruleId){
         ec2Service.revokeIngress(groupId, ruleId);
     }

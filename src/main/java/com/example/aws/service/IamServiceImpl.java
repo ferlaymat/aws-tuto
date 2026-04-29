@@ -59,17 +59,32 @@ public class IamServiceImpl implements IamService {
 
     @Override
     public Map<String, String> createAccessKey(String userName) {
-        return Map.of();
+        CreateAccessKeyRequest request = CreateAccessKeyRequest.builder().userName(userName).build();
+        CreateAccessKeyResponse response = iamClient.createAccessKey(request);
+
+        return Map.of("keyId", response.accessKey().accessKeyId(), "secretKey", response.accessKey().secretAccessKey());
     }
 
     @Override
     public List<Map<String, String>> listAccessKeys(String userName) {
-        return List.of();
+        ListAccessKeysRequest request = ListAccessKeysRequest.builder()
+                .userName(userName)
+                .build();
+        ListAccessKeysResponse response = iamClient.listAccessKeys(request);
+        return response.accessKeyMetadata().stream()
+                .map(keyMetadata -> Map.of(
+                        "accessKeyId", keyMetadata.accessKeyId(),
+                        "status", keyMetadata.status().toString(),
+                        "createDate", keyMetadata.createDate().toString()
+                ))
+                .toList();
+
     }
 
     @Override
     public void deleteAccessKey(String userName, String accessKeyId) {
-
+        DeleteAccessKeyRequest request = DeleteAccessKeyRequest.builder().userName(userName).accessKeyId(accessKeyId).build();
+        iamClient.deleteAccessKey(request);
     }
 
     @Override
@@ -103,23 +118,38 @@ public class IamServiceImpl implements IamService {
     }
 
     @Override
-    public String createRole(String roleName, String trustPolicy, String description) {
-        return "";
+    public Map<String, String> createRole(String roleName, String trustPolicy, String description) {
+        CreateRoleRequest request = CreateRoleRequest.builder().roleName(roleName).description(description).assumeRolePolicyDocument(trustPolicy).build();
+        CreateRoleResponse response = iamClient.createRole(request);
+        return Map.of(
+                "roleId", response.role().roleId(),
+                "roleName", response.role().roleName(),
+                "arn", response.role().arn(),
+                "createdAt", response.role().createDate().toString()
+        );
     }
 
     @Override
     public void deleteRole(String roleName) {
-
+        DeleteRoleRequest request = DeleteRoleRequest.builder().roleName(roleName).build();
+        iamClient.deleteRole(request);
     }
 
     @Override
     public Map<String, String> getRoleDetails(String roleName) {
-        return Map.of();
+        GetRoleRequest request = GetRoleRequest.builder().roleName(roleName).build();
+        GetRoleResponse response = iamClient.getRole(request);
+        return Map.of(
+                "roleId", response.role().roleId(),
+                "roleName", response.role().roleName(),
+                "arn", response.role().arn(),
+                "createdAt", response.role().createDate().toString()
+        );
     }
 
     @Override
-    public List<String> listRoles() {
-        return List.of();
+    public Map<String, String> listRoles() {
+        return iamClient.listRoles().roles().stream().collect(Collectors.toMap(Role::roleId, Role::roleName));
     }
 
     @Override
@@ -138,22 +168,44 @@ public class IamServiceImpl implements IamService {
     }
 
     @Override
-    public String createGroup(String groupName) {
-        return "";
+    public Map<String, String> createGroup(String groupName) {
+        CreateGroupRequest request = CreateGroupRequest.builder().groupName(groupName).build();
+        CreateGroupResponse response = iamClient.createGroup(request);
+        return Map.of(
+                "groupId", response.group().groupId(),
+                "groupName", response.group().groupName(),
+                "arn", response.group().arn(),
+                "createdAt", response.group().createDate().toString()
+        );
+    }
+
+    @Override
+    public void deleteGroup(String groupName) {
+        DeleteGroupRequest request = DeleteGroupRequest.builder().groupName(groupName).build();
+        iamClient.deleteGroup(request);
     }
 
     @Override
     public void addUserToGroup(String groupName, String userName) {
-
+        AddUserToGroupRequest request = AddUserToGroupRequest.builder().groupName(groupName).userName(userName).build();
+        iamClient.addUserToGroup(request);
     }
 
     @Override
-    public List<String> listGroups() {
-        return List.of();
+    public void removeUserFromGroup(String groupName, String userName) {
+        RemoveUserFromGroupRequest request = RemoveUserFromGroupRequest.builder().groupName(groupName).userName(userName).build();
+        iamClient.removeUserFromGroup(request);
+    }
+
+    @Override
+    public Map<String, String> listGroups() {
+        return iamClient.listGroups().groups().stream().collect(Collectors.toMap(Group::groupId, Group::groupName));
     }
 
     @Override
     public List<String> listUsersInGroup(String groupName) {
-        return List.of();
+        GetGroupRequest request = GetGroupRequest.builder().groupName(groupName).build();
+        GetGroupResponse response = iamClient.getGroup(request);
+        return response.users().stream().map(User::userName).toList();
     }
 }
