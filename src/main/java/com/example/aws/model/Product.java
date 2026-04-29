@@ -1,5 +1,6 @@
 package com.example.aws.model;
 
+import com.example.aws.config.AutoCreateTable;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 
 //Do not use lombok with dynamoDB cause annotation scan get/is prefixed methods and is not able to scan generated methods
 @DynamoDbBean  //equivalent to entity or document
+@AutoCreateTable(tableName = "Products") //custom annotation to allow auto generation of table in db
 public class Product {
 
     private String id;
