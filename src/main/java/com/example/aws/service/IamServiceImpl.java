@@ -137,14 +137,24 @@ public class IamServiceImpl implements IamService {
 
     @Override
     public Map<String, String> getRoleDetails(String roleName) {
-        GetRoleRequest request = GetRoleRequest.builder().roleName(roleName).build();
-        GetRoleResponse response = iamClient.getRole(request);
-        return Map.of(
-                "roleId", response.role().roleId(),
-                "roleName", response.role().roleName(),
-                "arn", response.role().arn(),
-                "createdAt", response.role().createDate().toString()
-        );
+        try {
+            GetRoleRequest request = GetRoleRequest.builder().roleName(roleName).build();
+            GetRoleResponse response = iamClient.getRole(request);
+            return Map.of(
+                    "roleId", response.role().roleId(),
+                    "roleName", response.role().roleName(),
+                    "arn", response.role().arn(),
+                    "createdAt", response.role().createDate().toString()
+            );
+        } catch (
+                IamException e) {
+            log.info("Status code: {}", e.statusCode());
+            log.info("Message: {}", e.getMessage());
+            if (e.statusCode() == 404) {//
+                return Map.of("Error", "The role with name " + roleName + " cannot be found");
+            }
+            throw e; // just in case return other error code
+        }
     }
 
     @Override

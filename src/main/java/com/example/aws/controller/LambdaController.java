@@ -1,10 +1,14 @@
 package com.example.aws.controller;
 
+import com.example.aws.model.LambdaRequestBody;
 import com.example.aws.service.LambdaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.lambda.model.Runtime;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +19,14 @@ import java.util.Map;
 public class LambdaController {
 
     private final LambdaService lambdaService;
+
+    @PostMapping("/{name}")
+    Map<String, String> createFunction(
+            @PathVariable String name,
+            @RequestPart("metadata") LambdaRequestBody body,
+            @RequestPart("file") MultipartFile file) throws IOException {
+        return lambdaService.createFunction(name, body.roleArn(), body.runtime(), body.handler(), file.getBytes());
+    }
 
     @GetMapping
     public List<Map<String, String>> listFunctions() {
@@ -31,8 +43,8 @@ public class LambdaController {
         lambdaService.deleteFunction(name);
     }
 
-    @PostMapping("/{name}")
-    public String invokeFunction(@PathVariable String name, @RequestBody String payload) {
+    @PostMapping("/{name}/invoke")
+    public String invokeFunction(@PathVariable String name, @RequestBody(required = false) String payload) {
         return lambdaService.invokeFunction(name, payload);
     }
 }
