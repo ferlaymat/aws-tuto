@@ -1,3 +1,3 @@
-package com.example.aws.model;
+package com.example.aws.dto;
 
 public record RoleRequestBody(String trustPolicy, String description) {}

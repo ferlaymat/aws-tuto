@@ -1,12 +1,11 @@
 package com.example.aws.controller;
 
-import com.example.aws.model.LambdaRequestBody;
+import com.example.aws.dto.LambdaRequestBody;
 import com.example.aws.service.LambdaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.lambda.model.Runtime;
 
 import java.io.IOException;
 import java.util.List;

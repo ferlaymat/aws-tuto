@@ -1,6 +1,6 @@
 package com.example.aws.controller;
 
-import com.example.aws.model.RoleRequestBody;
+import com.example.aws.dto.RoleRequestBody;
 import com.example.aws.service.IamService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

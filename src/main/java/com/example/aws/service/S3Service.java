@@ -1,6 +1,6 @@
 package com.example.aws.service;
 
-import com.example.aws.model.PagedResponse;
+import com.example.aws.dto.PagedResponse;
 
 import java.io.IOException;
 import java.nio.file.Path;

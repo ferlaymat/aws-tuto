@@ -1,4 +1,4 @@
-package com.example.aws.model;
+package com.example.aws.dto;
 
 import java.util.List;
 

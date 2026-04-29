@@ -1,4 +1,4 @@
-package com.example.aws.model;
+package com.example.aws.dto;
 
 import software.amazon.awssdk.services.lambda.model.Runtime;
 
