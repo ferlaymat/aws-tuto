@@ -5,8 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
+import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
+import software.amazon.awssdk.services.dynamodb.model.DeleteTableRequest;
 import software.amazon.awssdk.services.dynamodb.model.ListTablesResponse;
 
 import java.math.BigDecimal;
@@ -27,6 +31,8 @@ public class DynamoDBServiceImpl implements DynamoDBService {
 
     @Override
     public void deleteTable(String tableName) {
+        DeleteTableRequest request = DeleteTableRequest.builder().tableName(tableName).build();
+        dynamoDbClient.deleteTable(request);
     }
 
     @Override
@@ -37,17 +43,32 @@ public class DynamoDBServiceImpl implements DynamoDBService {
 
     @Override
     public void saveProduct(Product product) {
+        TableSchema<Product> productTableSchema = TableSchema.fromBean(Product.class);
+        DynamoDbTable<Product> productTable = dynamoDbEnhancedClient.table("Products", productTableSchema);
 
+        TransactWriteItemsEnhancedRequest request = TransactWriteItemsEnhancedRequest.builder().addPutItem(productTable, product).build();
+        dynamoDbEnhancedClient.transactWriteItems(request);
+        //can be done with a simple productTable.getItem() but not manage atomicity
     }
 
     @Override
     public Optional<Product> getProduct(String id, String category) {
-        return Optional.empty();
+        TableSchema<Product> productTableSchema = TableSchema.fromBean(Product.class);
+        DynamoDbTable<Product> productTable = dynamoDbEnhancedClient.table("Products", productTableSchema);
+
+        Product product = productTable.getItem(Key.builder().partitionValue(id).sortValue(category).build());
+
+        return Optional.ofNullable(product);
+
     }
 
     @Override
     public void deleteProduct(String id, String category) {
+        TableSchema<Product> productTableSchema = TableSchema.fromBean(Product.class);
+        DynamoDbTable<Product> productTable = dynamoDbEnhancedClient.table("Products", productTableSchema);
 
+        TransactWriteItemsEnhancedRequest request = TransactWriteItemsEnhancedRequest.builder().addDeleteItem(productTable, Key.builder().partitionValue(id).sortValue(category).build()).build();
+        dynamoDbEnhancedClient.transactWriteItems(request);
     }
 
     @Override

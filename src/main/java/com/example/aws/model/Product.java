@@ -7,6 +7,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 //Do not use lombok with dynamoDB cause annotation scan get/is prefixed methods and is not able to scan generated methods
 @DynamoDbBean  //equivalent to entity or document
@@ -18,6 +19,17 @@ public class Product {
     private String category;
     private BigDecimal price;
     private String description;
+
+    public Product() {
+    }
+
+    public Product(String name, String category, BigDecimal price, String description) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.description = description;
+    }
 
     // Partition key is mandatory
     @DynamoDbPartitionKey
